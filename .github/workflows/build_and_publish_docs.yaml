@@ -2,7 +2,7 @@ name: Build and Update Docs
 on:
   push:
     branches:
-      - main
+      - master
 
 concurrency:
   cancel-in-progress: true
@@ -25,9 +25,9 @@ jobs:
         with:
           activate-environment: test
           miniconda-version: latest
-          python-version: '3.10'
+          python-version: "3.10"
       - name: Install dependencies
-        run: 'set -eux
+        run: "set -eux
 
           conda activate test
 
@@ -41,7 +41,7 @@ jobs:
 
           pip install dist/*.whl
 
-          '
+          "
         shell: bash -l {0}
       - id: measurement-4
         name: Record Measurement After Install dependencies
@@ -51,7 +51,7 @@ jobs:
           label: Install dependencies
           task: get-measurement
       - name: Build docs
-        run: 'set -eux
+        run: "set -eux
 
           conda activate test
 
@@ -65,7 +65,7 @@ jobs:
 
           cd ..
 
-          '
+          "
         shell: bash -l {0}
       - id: measurement-6
         name: Record Measurement After Build docs

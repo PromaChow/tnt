@@ -2,7 +2,7 @@ name: Push CPU Binary Nightly
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   unit_tests:
@@ -22,7 +22,7 @@ jobs:
           miniconda-version: latest
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies
-        run: 'set -eux
+        run: "set -eux
 
           conda activate test
 
@@ -36,7 +36,7 @@ jobs:
 
           conda install pytorch cpuonly -c pytorch-nightly
 
-          '
+          "
         shell: bash -l {0}
       - id: measurement-4
         name: Record Measurement After Install dependencies
@@ -46,13 +46,13 @@ jobs:
           label: Install dependencies
           task: get-measurement
       - name: Run unit tests
-        run: 'set -eux
+        run: "set -eux
 
           conda activate test
 
           pytest tests -vv
 
-          '
+          "
         shell: bash -l {0}
       - id: measurement-6
         name: Record Measurement After Run unit tests

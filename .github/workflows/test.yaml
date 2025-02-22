@@ -2,7 +2,7 @@ name: unit test
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   unit_tests_nightly_pytorch:
@@ -22,7 +22,7 @@ jobs:
           miniconda-version: latest
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies
-        run: 'set -eux
+        run: "set -eux
 
           conda activate test
 
@@ -34,7 +34,7 @@ jobs:
 
           conda install pytorch cpuonly -c pytorch-nightly
 
-          '
+          "
         shell: bash -l {0}
       - id: measurement-4
         name: Record Measurement After Install dependencies
@@ -44,13 +44,13 @@ jobs:
           label: Install dependencies
           task: get-measurement
       - name: Run unit tests with coverage
-        run: 'set -eux
+        run: "set -eux
 
           conda activate test
 
           pytest --cov=. --cov-report xml tests -vv
 
-          '
+          "
         shell: bash -l {0}
       - id: measurement-6
         name: Record Measurement After Run unit tests with coverage
@@ -96,7 +96,7 @@ jobs:
           miniconda-version: latest
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies
-        run: 'set -eux
+        run: "set -eux
 
           conda activate test
 
@@ -106,7 +106,7 @@ jobs:
 
           pip install  --no-build-isolation -e .
 
-          '
+          "
         shell: bash -l {0}
       - id: measurement-4
         name: Record Measurement After Install dependencies
@@ -116,13 +116,13 @@ jobs:
           label: Install dependencies
           task: get-measurement
       - name: Run unit tests with coverage
-        run: 'set -eux
+        run: "set -eux
 
           conda activate test
 
           pytest --cov=. --cov-report xml tests -vv
 
-          '
+          "
         shell: bash -l {0}
       - id: measurement-6
         name: Record Measurement After Run unit tests with coverage
