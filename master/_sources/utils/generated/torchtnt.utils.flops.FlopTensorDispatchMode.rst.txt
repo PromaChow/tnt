@@ -1,0 +1,25 @@
+﻿torchtnt.utils.flops.FlopTensorDispatchMode
+===========================================
+
+.. currentmodule:: torchtnt.utils.flops
+
+.. autoclass:: FlopTensorDispatchMode
+
+   
+   .. automethod:: __init__
+
+   
+   .. rubric:: Methods
+
+   .. autosummary::
+   
+      ~FlopTensorDispatchMode.__init__
+      ~FlopTensorDispatchMode.is_infra_mode
+      ~FlopTensorDispatchMode.push
+      ~FlopTensorDispatchMode.reset
+   
+   
+
+   
+   
+   
