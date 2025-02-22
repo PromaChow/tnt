@@ -1,52 +1,95 @@
 name: Build and Update Docs
-
 on:
   push:
-    branches: [ master ]
+    branches:
+      - main
 
-# Allow one concurrent deployment
 concurrency:
-  group: "pages"
   cancel-in-progress: true
-
+  group: pages
 jobs:
   build_and_publish_docs:
-    runs-on: ubuntu-latest
     permissions:
-      # Grant write permission here so that the doc can be pushed to gh-pages branch
       contents: write
+    runs-on: ubuntu-latest
     steps:
+      - name: Start Energy Measurement
+        uses: green-coding-solutions/eco-ci-energy-estimation@v4
+        with:
+          json-output: true
+          task: start-measurement
       - name: Check out repo
         uses: actions/checkout@v2
       - name: Setup conda env
         uses: conda-incubator/setup-miniconda@v2
         with:
-          miniconda-version: "latest"
           activate-environment: test
-          python-version: "3.10"
+          miniconda-version: latest
+          python-version: '3.10'
       - name: Install dependencies
-        shell: bash -l {0}
-        run: |
-          set -eux
+        run: 'set -eux
+
           conda activate test
+
           pip install -r requirements.txt
+
           pip install -r dev-requirements.txt
+
           conda install pytorch cpuonly -c pytorch-nightly
+
           python setup.py sdist bdist_wheel
+
           pip install dist/*.whl
-      - name: Build docs
+
+          '
         shell: bash -l {0}
-        run: |
-          set -eux
+      - id: measurement-4
+        name: Record Measurement After Install dependencies
+        uses: green-coding-solutions/eco-ci-energy-estimation@v4
+        with:
+          json-output: true
+          label: Install dependencies
+          task: get-measurement
+      - name: Build docs
+        run: 'set -eux
+
           conda activate test
+
           cd docs
+
           pip install -r requirements.txt
+
           make html
+
           touch build/html/.nojekyll
+
           cd ..
+
+          '
+        shell: bash -l {0}
+      - id: measurement-6
+        name: Record Measurement After Build docs
+        uses: green-coding-solutions/eco-ci-energy-estimation@v4
+        with:
+          json-output: true
+          label: Build docs
+          task: get-measurement
       - name: Deploy docs to Github pages
         uses: JamesIves/github-pages-deploy-action@v4.4.1
         with:
-            branch: gh-pages # The branch the action should deploy to.
-            folder: docs/build/html # The folder the action should deploy.
-            target-folder: master
+          branch: gh-pages
+          folder: docs/build/html
+          target-folder: master
+      - id: display-measurement
+        name: Display Energy Results
+        uses: green-coding-solutions/eco-ci-energy-estimation@v4
+        with:
+          json-output: true
+          task: display-results
+      - name: Save Total Energy Consumption Data
+        run: echo '${ steps.final-measurement.outputs.data-total-json }' > total_energy_consumption-1740222587.json
+      - name: Upload Energy Consumption Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: total-energy-consumption
+          path: total_energy_consumption-1740222587.json
